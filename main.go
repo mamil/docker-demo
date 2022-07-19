@@ -20,7 +20,7 @@ func main() {
 func run() {
 	cmd := exec.Command(os.Args[2])
 	cmd.SysProcAttr = &syscall.SysProcAttr{ // 需要sudo权限运行
-		Cloneflags: syscall.CLONE_NEWUTS | syscall.CLONE_NEWIPC | syscall.CLONE_NEWPID | syscall.CLONE_NEWNS | syscall.CLONE_NEWUSER,
+		Cloneflags: syscall.CLONE_NEWUTS | syscall.CLONE_NEWIPC | syscall.CLONE_NEWPID | syscall.CLONE_NEWNS | syscall.CLONE_NEWUSER | syscall.CLONE_NEWNET,
 		// Credential: &syscall.Credential{
 		// 	Uid: uint32(1),
 		// 	Gid: uint32(1),
