@@ -17,6 +17,10 @@ var runCommand = cli.Command{
 			Name:  "ti",
 			Usage: "enable tty",
 		},
+		cli.BoolFlag{
+			Name:  "it",
+			Usage: "enable tty",
+		},
 	},
 	Action: func(context *cli.Context) error {
 		log.Infof("runCommand start, args:%+v", context.Args())
@@ -24,7 +28,7 @@ var runCommand = cli.Command{
 			return fmt.Errorf("missing container command")
 		}
 		cmd := context.Args().Get(0)
-		tty := context.Bool("ti")
+		tty := context.Bool("ti") || context.Bool("it")
 		Run(tty, cmd)
 		return nil
 	},
