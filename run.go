@@ -1,18 +1,39 @@
 package main
 
 import (
+	"docker-demo/cgroups"
+	"docker-demo/cgroups/subsystems"
 	"docker-demo/container"
 	"os"
+	"strings"
 
 	log "github.com/sirupsen/logrus"
 )
 
-func Run(tty bool, command string) {
-	log.Infof("Run, tty:%v, command:%v", tty, command)
-	parent := container.NewParentProcess(tty, command)
+func Run(tty bool, comArray []string, res *subsystems.ResourceConfig) {
+	parent, writePipe := container.NewParentProcess(tty)
+	if parent == nil {
+		log.Errorf("New parent process error")
+		return
+	}
 	if err := parent.Start(); err != nil {
 		log.Error(err)
 	}
+	// use docker-demo as cgroup name
+	// 设置资源限制
+	cgroupManager := cgroups.NewCgroupManager("docker-demo")
+	defer cgroupManager.Destroy()
+	cgroupManager.Set(res)
+	cgroupManager.Apply(parent.Process.Pid)
+
+	// 初始化容器
+	sendInitCommand(comArray, writePipe)
 	parent.Wait()
-	os.Exit(-1)
+}
+
+func sendInitCommand(comArray []string, writePipe *os.File) {
+	command := strings.Join(comArray, " ")
+	log.Infof("command all is %s", command)
+	writePipe.WriteString(command)
+	writePipe.Close()
 }

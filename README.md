@@ -11,3 +11,8 @@ $ sudo ./docker-demo run -ti /bin/sh
 ```
 mount -t proc proc /proc
 ```
+
+## 添加资源限制
+```
+sudo ./docker-demo run -ti -m 100m stress --vm-bytes 200m --vm-keep -m 1
+```

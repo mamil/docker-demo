@@ -1,6 +1,7 @@
 package main
 
 import (
+	"docker-demo/cgroups/subsystems"
 	"docker-demo/container"
 	"fmt"
 
@@ -21,15 +22,35 @@ var runCommand = cli.Command{
 			Name:  "it",
 			Usage: "enable tty",
 		},
+		cli.StringFlag{
+			Name: "m",
+			Usage: "memory limit",
+		},
+		cli.StringFlag{
+			Name: "cpushare",
+			Usage: "cpushare limit",
+		},
+		cli.StringFlag{
+			Name: "cpuset",
+			Usage: "cpuset limit",
+		},
 	},
 	Action: func(context *cli.Context) error {
-		log.Infof("runCommand start, args:%+v", context.Args())
 		if len(context.Args()) < 1 {
-			return fmt.Errorf("missing container command")
+			return fmt.Errorf("Missing container command")
 		}
-		cmd := context.Args().Get(0)
+		var cmdArray []string
+		for _, arg := range context.Args() {
+			cmdArray = append(cmdArray, arg)
+		}
 		tty := context.Bool("ti") || context.Bool("it")
-		Run(tty, cmd)
+		resConf := &subsystems.ResourceConfig{
+			MemoryLimit: context.String("m"),
+			CpuSet:      context.String("cpuset"),
+			CpuShare:    context.String("cpushare"),
+		}
+
+		Run(tty, cmdArray, resConf)
 		return nil
 	},
 }
@@ -41,7 +62,7 @@ var initCommand = cli.Command{
 		log.Infof("init start")
 		cmd := context.Args().Get(0)
 		log.Infof("init command:%s", cmd)
-		err := container.RunContainerInitProcess(cmd, nil)
+		err := container.RunContainerInitProcess()
 		return err
 	},
 }
