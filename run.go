@@ -29,6 +29,7 @@ func Run(tty bool, comArray []string, res *subsystems.ResourceConfig) {
 	// 初始化容器
 	sendInitCommand(comArray, writePipe)
 	parent.Wait()
+	log.Infof("Run end")
 }
 
 func sendInitCommand(comArray []string, writePipe *os.File) {

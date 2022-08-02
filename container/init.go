@@ -17,6 +17,7 @@ func RunContainerInitProcess() error {
 	if cmdArray == nil || len(cmdArray) == 0 {
 		return fmt.Errorf("run container get user command error, cmdArray is nil")
 	}
+	log.Infof("RunContainerInitProcess, cmdArray:%v", cmdArray)
 
 	//setUpMount()
 

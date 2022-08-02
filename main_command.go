@@ -23,21 +23,21 @@ var runCommand = cli.Command{
 			Usage: "enable tty",
 		},
 		cli.StringFlag{
-			Name: "m",
+			Name:  "m",
 			Usage: "memory limit",
 		},
 		cli.StringFlag{
-			Name: "cpushare",
+			Name:  "cpushare",
 			Usage: "cpushare limit",
 		},
 		cli.StringFlag{
-			Name: "cpuset",
+			Name:  "cpuset",
 			Usage: "cpuset limit",
 		},
 	},
 	Action: func(context *cli.Context) error {
 		if len(context.Args()) < 1 {
-			return fmt.Errorf("Missing container command")
+			return fmt.Errorf("missing container command")
 		}
 		var cmdArray []string
 		for _, arg := range context.Args() {
@@ -49,7 +49,8 @@ var runCommand = cli.Command{
 			CpuSet:      context.String("cpuset"),
 			CpuShare:    context.String("cpushare"),
 		}
-
+		log.Infof("runCommand, tty:%v, cmdArray:%+v, resConf:%+v",
+			tty, cmdArray, resConf)
 		Run(tty, cmdArray, resConf)
 		return nil
 	},
