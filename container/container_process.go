@@ -24,6 +24,8 @@ func NewParentProcess(tty bool) (*exec.Cmd, *os.File) {
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
 	}
+
+	// 保存管道读取端的句柄
 	cmd.ExtraFiles = []*os.File{readPipe}
 	return cmd, writePipe
 }

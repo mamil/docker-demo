@@ -19,9 +19,9 @@ func RunContainerInitProcess() error {
 	}
 	log.Infof("RunContainerInitProcess, cmdArray:%v", cmdArray)
 
-	//setUpMount()
-
-	path, err := exec.LookPath(cmdArray[0])
+	defaultMountFlags := syscall.MS_NOEXEC | syscall.MS_NOSUID | syscall.MS_NODEV
+	syscall.Mount("proc", "/proc", "proc", uintptr(defaultMountFlags), "")
+	path, err := exec.LookPath(cmdArray[0]) // 找到命令的绝对路径
 	if err != nil {
 		log.Errorf("Exec loop path error %v", err)
 		return err
@@ -34,13 +34,14 @@ func RunContainerInitProcess() error {
 }
 
 func readUserCommand() []string {
-	pipe := os.NewFile(uintptr(3), "pipe")
+	pipe := os.NewFile(uintptr(3), "pipe") // 这里获取传递进来的管道，stdin,stdout,stderr,pip;前3个是默认带着的。
 	msg, err := ioutil.ReadAll(pipe)
 	if err != nil {
 		log.Errorf("init read pipe error %v", err)
 		return nil
 	}
 	msgStr := string(msg)
+	log.Infof("readUserCommand get msgStr:%v", msgStr)
 	return strings.Split(msgStr, " ")
 }
 
