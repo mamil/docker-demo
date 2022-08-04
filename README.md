@@ -52,6 +52,6 @@ kernel会把文件夹标记为这个cgroup的子cgroup，会继承父cgroup的�
 ```
 
 ## 问题- 发现运行之后可执行文件会消失
-
+之前设置cgroup名字有问题，删除的cgroup的时候会把执行文件删掉
 
 ## 问题- 运行之后需要重新mount proc
