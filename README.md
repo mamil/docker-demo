@@ -46,3 +46,7 @@ kernel会把文件夹标记为这个cgroup的子cgroup，会继承父cgroup的�
 只需要把进程id写到目标cgroup的tasks文件中即可
 
 ## AUFS测试
+
+```
+✗ sudo mount -t aufs -o dirs=./container-layer:./image-layer4:./image-layer3:./image-layer2:./image-layer1 none ./mnt
+```
