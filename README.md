@@ -69,4 +69,7 @@ kernel会把文件夹标记为这个cgroup的子cgroup，会继承父cgroup的�
   - 容器退出之后，资源没有清除，mnt处于无法删除状态
     用这个命令可以让文件恢复正常 `sudo umount /root/mnt -l`
     然后就可以正常删除了
-
+  - umount 失败，报错如下
+    ```
+    umount: /root/mnt2/containerVolume: umount failed: No such file or directory.
+    ```
