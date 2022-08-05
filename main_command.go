@@ -34,6 +34,10 @@ var runCommand = cli.Command{
 			Name:  "cpuset",
 			Usage: "cpuset limit",
 		},
+		cli.StringFlag{
+			Name:  "v",
+			Usage: "volume",
+		},
 	},
 	Action: func(context *cli.Context) error {
 		if len(context.Args()) < 1 {
@@ -49,9 +53,10 @@ var runCommand = cli.Command{
 			CpuSet:      context.String("cpuset"),
 			CpuShare:    context.String("cpushare"),
 		}
-		log.Infof("runCommand, tty:%v, cmdArray:%+v, resConf:%+v",
-			tty, cmdArray, resConf)
-		Run(tty, cmdArray, resConf)
+		volume := context.String("v")
+		log.Infof("runCommand, tty:%v, cmdArray:%+v, resConf:%+v, volume:%v",
+			tty, cmdArray, resConf, volume)
+		Run(tty, cmdArray, resConf, volume)
 		return nil
 	},
 }
@@ -60,9 +65,7 @@ var initCommand = cli.Command{
 	Name:  "init",
 	Usage: "Init container process run user's process in container. Do not call it outside",
 	Action: func(context *cli.Context) error {
-		log.Infof("init start")
-		cmd := context.Args().Get(0)
-		log.Infof("init command:%s", cmd)
+		log.Infof("initCommand start")
 		err := container.RunContainerInitProcess()
 		return err
 	},

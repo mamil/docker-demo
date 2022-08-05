@@ -55,3 +55,16 @@ kernel会把文件夹标记为这个cgroup的子cgroup，会继承父cgroup的�
 之前设置cgroup名字有问题，删除的cgroup的时候会把执行文件删掉
 
 ## 问题- 运行之后需要重新mount proc
+
+
+
+## volume数据卷
+
+```
+# sudo ./docker-demo run -ti -v /root/volume:/containerVolume sh
+```
+
+---
+- 问题
+  - 容器退出之后，资源没有清除，mnt处于无法删除状态
+
