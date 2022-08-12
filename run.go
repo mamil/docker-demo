@@ -19,12 +19,15 @@ func Run(tty bool, comArray []string, res *subsystems.ResourceConfig, volume str
 	if err := parent.Start(); err != nil { // 启动容器
 		log.Error(err)
 	}
-	// use docker-demo as cgroup name
-	// 设置资源限制
-	cgroupManager := cgroups.NewCgroupManager("docker-demo1") // 如果名字是docker-demo，会把执行文件删掉
-	defer cgroupManager.Destroy()
-	cgroupManager.Set(res)
-	cgroupManager.Apply(parent.Process.Pid)
+
+	if res != nil {
+		// use docker-demo as cgroup name
+		// 设置资源限制
+		cgroupManager := cgroups.NewCgroupManager("docker-demo1") // 如果名字是docker-demo，会把执行文件删掉
+		defer cgroupManager.Destroy()
+		cgroupManager.Set(res)
+		cgroupManager.Apply(parent.Process.Pid)
+	}
 
 	// 初始化容器
 	sendInitCommand(comArray, writePipe)

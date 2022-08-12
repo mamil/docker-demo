@@ -48,11 +48,20 @@ var runCommand = cli.Command{
 			cmdArray = append(cmdArray, arg)
 		}
 		tty := context.Bool("ti") || context.Bool("it")
-		resConf := &subsystems.ResourceConfig{
-			MemoryLimit: context.String("m"),
-			CpuSet:      context.String("cpuset"),
-			CpuShare:    context.String("cpushare"),
+
+		var resConf *subsystems.ResourceConfig
+		if context.String("m") == "" &&
+			context.String("cpuset") == "" &&
+			context.String("cpushare") == "" {
+			resConf = nil
+		} else {
+			resConf = &subsystems.ResourceConfig{
+				MemoryLimit: context.String("m"),
+				CpuSet:      context.String("cpuset"),
+				CpuShare:    context.String("cpushare"),
+			}
 		}
+
 		volume := context.String("v")
 		log.Infof("runCommand, tty:%v, cmdArray:%+v, resConf:%+v, volume:%v",
 			tty, cmdArray, resConf, volume)
@@ -68,5 +77,18 @@ var initCommand = cli.Command{
 		log.Infof("initCommand start")
 		err := container.RunContainerInitProcess()
 		return err
+	},
+}
+
+var commitCommand = cli.Command{
+	Name:  "commit",
+	Usage: "commit a container into image",
+	Action: func(context *cli.Context) error {
+		if len(context.Args()) < 1 {
+			return fmt.Errorf("Missing container name")
+		}
+		imageName := context.Args().Get(0)
+		commitContainer(imageName)
+		return nil
 	},
 }
