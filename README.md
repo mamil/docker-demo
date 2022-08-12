@@ -51,12 +51,16 @@ kernel会把文件夹标记为这个cgroup的子cgroup，会继承父cgroup的�
 ✗ sudo mount -t aufs -o dirs=./container-layer:./image-layer4:./image-layer3:./image-layer2:./image-layer1 none ./mnt
 ```
 
-## 问题- 发现运行之后可执行文件会消失
+### 问题- 发现运行之后可执行文件会消失
 之前设置cgroup名字有问题，删除的cgroup的时候会把执行文件删掉
 
-## 问题- 运行之后需要重新mount proc
-
-
+### 问题- 运行之后需要重新mount proc
+这个应该是在容器里面重新mount proc导致的，如果容器里面不mount proc，退出后宿主机是正常的
+```go
+    defaultMountFlags := syscall.MS_NOEXEC | syscall.MS_NOSUID | syscall.MS_NODEV
+    syscall.Mount("proc", "/proc", "proc", uintptr(defaultMountFlags), "")
+```
+proc的机制还需要看一下
 
 ## volume数据卷
 
@@ -65,15 +69,17 @@ kernel会把文件夹标记为这个cgroup的子cgroup，会继承父cgroup的�
 ```
 
 ---
-- 问题
-  - 容器退出之后，资源没有清除，mnt处于无法删除状态
-    先恢复proc挂载，`mount -t proc proc /proc`
-    用这个命令可以让文件恢复正常 `sudo umount /root/mnt -l`
-    然后就可以正常删除了
-  - umount 失败，报错如下
-    ```
-    umount: /root/mnt2/containerVolume: umount failed: No such file or directory.
-    ```
+### 问题- 容器退出之后，资源没有清除，mnt处于无法删除状态
+先恢复proc挂载，`mount -t proc proc /proc`
+用这个命令可以让文件恢复正常 `sudo umount /root/mnt -l`
+然后就可以正常删除了
+
+应该和挂载/proc有关，不挂载可以删除
+
+### 问题- umount 失败，报错如下
+```
+umount: /root/mnt2/containerVolume: umount failed: No such file or directory.
+```
 
 ### 运行commit
 ```
