@@ -1,6 +1,7 @@
 package container
 
 import (
+	"os"
 	"os/exec"
 	"testing"
 )
@@ -14,4 +15,6 @@ func TestFindCgroupMountpoint(t *testing.T) {
 		t.Logf("LookPath path:%v", path)
 	}
 
+	env := os.Environ()
+	t.Logf("env:%v", env)
 }
