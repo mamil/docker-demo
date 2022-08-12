@@ -67,9 +67,27 @@ kernel会把文件夹标记为这个cgroup的子cgroup，会继承父cgroup的�
 ---
 - 问题
   - 容器退出之后，资源没有清除，mnt处于无法删除状态
+    先恢复proc挂载，
     用这个命令可以让文件恢复正常 `sudo umount /root/mnt -l`
     然后就可以正常删除了
   - umount 失败，报错如下
     ```
     umount: /root/mnt2/containerVolume: umount failed: No such file or directory.
     ```
+
+### 运行commit
+```
+# sudo ./docker-demo commit 123
+```
+会在/root 生成
+```
+# ll
+total 1.5M
+-rw-r--r--  1 root root   20 Aug 12 11:40 123.tar
+```
+
+但现在的代码还有问题，会报错
+```
+Tar folder /root/mnt error exit status 2
+```
+生成的tar文件里面没有东西

@@ -155,7 +155,7 @@ func DeleteMountPoint(rootURL string, mntURL string) {
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	if err := cmd.Run(); err != nil {
-		log.Errorf("%v", err)
+		log.Errorf("umount err:%v", err)
 	}
 	if err := os.RemoveAll(mntURL); err != nil {
 		log.Infof("Remove mountpoint dir %s error %v", mntURL, err)
