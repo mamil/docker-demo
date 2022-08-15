@@ -51,16 +51,18 @@ kernel会把文件夹标记为这个cgroup的子cgroup，会继承父cgroup的�
 ✗ sudo mount -t aufs -o dirs=./container-layer:./image-layer4:./image-layer3:./image-layer2:./image-layer1 none ./mnt
 ```
 
-### 问题- 发现运行之后可执行文件会消失
+### [done]问题- 发现运行之后可执行文件会消失
 之前设置cgroup名字有问题，删除的cgroup的时候会把执行文件删掉
 
-### 问题- 运行之后需要重新mount proc
+### [done]问题- 运行之后需要重新mount proc
 这个应该是在容器里面重新mount proc导致的，如果容器里面不mount proc，退出后宿主机是正常的
 ```go
     defaultMountFlags := syscall.MS_NOEXEC | syscall.MS_NOSUID | syscall.MS_NODEV
     syscall.Mount("proc", "/proc", "proc", uintptr(defaultMountFlags), "")
 ```
-proc的机制还需要看一下
+
+---
+在退出container之后需要重新在宿主机mount proc，就可以解决这个问题
 
 ## volume数据卷
 

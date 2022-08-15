@@ -9,6 +9,8 @@ import (
 	"strings"
 	"syscall"
 
+	"docker-demo/util"
+
 	log "github.com/sirupsen/logrus"
 )
 
@@ -19,8 +21,9 @@ func RunContainerInitProcess() error {
 	}
 	log.Infof("RunContainerInitProcess, cmdArray:%v", cmdArray)
 
-	defaultMountFlags := syscall.MS_NOEXEC | syscall.MS_NOSUID | syscall.MS_NODEV
-	syscall.Mount("proc", "/proc", "proc", uintptr(defaultMountFlags), "")
+	util.MountProc()
+	// setUpMount()
+
 	path, err := exec.LookPath(cmdArray[0]) // 找到命令的绝对路径
 	if err != nil {
 		log.Errorf("Exec loop path error %v", err)

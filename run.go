@@ -4,6 +4,8 @@ import (
 	"docker-demo/cgroups"
 	"docker-demo/cgroups/subsystems"
 	"docker-demo/container"
+	"docker-demo/util"
+
 	"os"
 	"strings"
 
@@ -39,6 +41,9 @@ func Run(tty bool, comArray []string, res *subsystems.ResourceConfig, volume str
 	mntURL := "/root/mnt"
 	rootURL := "/root"
 	container.DeleteWorkSpace(rootURL, mntURL, volume)
+
+	// 为宿主机重新mount proc
+	util.MountProc()
 
 	log.Infof("Run end")
 }
