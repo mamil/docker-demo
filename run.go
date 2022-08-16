@@ -34,19 +34,21 @@ func Run(tty bool, comArray []string, res *subsystems.ResourceConfig, volume str
 
 	// 初始化容器
 	sendInitCommand(comArray, writePipe)
-	parent.Wait()
+	if tty {
+		parent.Wait()
 
-	log.Infof("Run after wait")
+		log.Infof("Run after wait")
 
-	// 为宿主机重新mount proc
-	util.MountProc()
+		// 为宿主机重新mount proc
+		util.MountProc()
 
-	// vloume
-	mntURL := "/root/mnt"
-	rootURL := "/root"
-	// ShowMountPoint(rootURL, mntURL)
+		// vloume
+		mntURL := "/root/mnt"
+		rootURL := "/root"
+		// ShowMountPoint(rootURL, mntURL)
 
-	container.DeleteWorkSpace(rootURL, mntURL, volume)
+		container.DeleteWorkSpace(rootURL, mntURL, volume)
+	}
 
 	log.Infof("Run end")
 }
