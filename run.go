@@ -5,6 +5,7 @@ import (
 	"docker-demo/cgroups/subsystems"
 	"docker-demo/container"
 	"docker-demo/util"
+	"os/exec"
 
 	"os"
 	"strings"
@@ -37,13 +38,15 @@ func Run(tty bool, comArray []string, res *subsystems.ResourceConfig, volume str
 
 	log.Infof("Run after wait")
 
+	// 为宿主机重新mount proc
+	util.MountProc()
+
 	// vloume
 	mntURL := "/root/mnt"
 	rootURL := "/root"
-	container.DeleteWorkSpace(rootURL, mntURL, volume)
+	// ShowMountPoint(rootURL, mntURL)
 
-	// 为宿主机重新mount proc
-	util.MountProc()
+	container.DeleteWorkSpace(rootURL, mntURL, volume)
 
 	log.Infof("Run end")
 }
@@ -53,4 +56,13 @@ func sendInitCommand(comArray []string, writePipe *os.File) {
 	log.Infof("command all is %s", command)
 	writePipe.WriteString(command)
 	writePipe.Close()
+}
+
+func ShowMountPoint(rootURL string, mntURL string) {
+	cmd := exec.Command("ls", "-al", rootURL)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	if err := cmd.Run(); err != nil {
+		log.Errorf("ls err:%v", err)
+	}
 }
