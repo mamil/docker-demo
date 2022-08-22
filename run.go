@@ -38,17 +38,17 @@ func Run(tty bool, comArray []string, res *subsystems.ResourceConfig, volume str
 		parent.Wait()
 
 		log.Infof("Run after wait")
-
-		// 为宿主机重新mount proc
-		util.MountProc()
-
-		// vloume
-		mntURL := "/root/mnt"
-		rootURL := "/root"
-		// ShowMountPoint(rootURL, mntURL)
-
-		container.DeleteWorkSpace(rootURL, mntURL, volume)
 	}
+
+	// 为宿主机重新mount proc
+	util.MountProc()
+
+	// vloume
+	mntURL := "/root/mnt"
+	rootURL := "/root"
+	// ShowMountPoint(rootURL, mntURL)
+
+	container.DeleteWorkSpace(rootURL, mntURL, volume)
 
 	log.Infof("Run end")
 }

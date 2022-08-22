@@ -104,3 +104,10 @@ umount: /root/mnt2/containerVolume: umount failed: No such file or directory.
 total 1.5M
 -rw-r--r--  1 root root   20 Aug 12 11:40 123.tar
 ```
+
+## 支持后台运行
+```
+sudo ./docker-demo run -d top
+```
+
+虽然可以运行，但还是前面/proc没法2边挂载的缘故，导致宿主机没法观察运行情况
