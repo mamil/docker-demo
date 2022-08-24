@@ -111,3 +111,12 @@ sudo ./docker-demo run -d top
 ```
 
 虽然可以运行，但还是前面/proc没法2边挂载的缘故，导致宿主机没法观察运行情况
+### 问题- 后台运行是否成功
+
+## 查看容器日志
+```
+# sudo ./docker-demo run -d --name bird top
+
+# sudo ./docker-demo logs bird
+```
+重定向日志输出到文件，然后查看文件信息，但是由于程序的后台运行还有点问题，所以现在只能看到启动时的日志，后续日志没有。

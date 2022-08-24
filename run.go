@@ -19,7 +19,7 @@ import (
 )
 
 func Run(tty bool, comArray []string, res *subsystems.ResourceConfig, volume string, containerName string) {
-	parent, writePipe := container.NewParentProcess(tty, volume)
+	parent, writePipe := container.NewParentProcess(tty, volume, containerName)
 	if parent == nil {
 		log.Errorf("New parent process error")
 		return
@@ -50,18 +50,18 @@ func Run(tty bool, comArray []string, res *subsystems.ResourceConfig, volume str
 		parent.Wait()
 		deleteContainerInfo(containerName)
 
+		// 为宿主机重新mount proc
+		util.MountProc()
+
+		// vloume
+		mntURL := "/root/mnt"
+		rootURL := "/root"
+		// ShowMountPoint(rootURL, mntURL)
+
+		container.DeleteWorkSpace(rootURL, mntURL, volume)
+
 		log.Infof("Run after wait")
 	}
-
-	// 为宿主机重新mount proc
-	util.MountProc()
-
-	// vloume
-	mntURL := "/root/mnt"
-	rootURL := "/root"
-	// ShowMountPoint(rootURL, mntURL)
-
-	container.DeleteWorkSpace(rootURL, mntURL, volume)
 
 	log.Infof("Run end")
 }
