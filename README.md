@@ -64,9 +64,20 @@ kernel会把文件夹标记为这个cgroup的子cgroup，会继承父cgroup的�
 ---
 在退出container之后需要重新在宿主机mount proc，就可以解决这个问题
 
-### 问题- proc现在只能挂载在容器或者宿主机，二选一
+---
+上面的解决方案不完善，新的内核版本中，使用Mount之前调用下面这行代码
+```
+syscall.Mount("", "/", "", syscall.MS_PRIVATE|syscall.MS_REC, "")
+```
+把所有挂载点的传播类型改为 private，避免本 namespace 中的挂载事件外泄。
+
+ref:https://github.com/xianlubird/mydocker/issues/58
+
+### [done]问题- proc现在只能挂载在容器或者宿主机，二选一
 在解决上面问题之后，退出容器虽然能在宿主机正常使用proc，但是容器运行时，宿主机不能使用proc，还需要改进
 
+---
+已解决，见上文
 
 ## volume数据卷
 
