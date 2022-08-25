@@ -19,6 +19,11 @@ import (
 )
 
 func Run(tty bool, comArray []string, res *subsystems.ResourceConfig, volume string, containerName string) {
+	// 先确保容器名字不为空
+	if containerName == "" {
+		containerName = randStringBytes(10)
+	}
+
 	parent, writePipe := container.NewParentProcess(tty, volume, containerName)
 	if parent == nil {
 		log.Errorf("New parent process error")
@@ -29,7 +34,8 @@ func Run(tty bool, comArray []string, res *subsystems.ResourceConfig, volume str
 	}
 
 	//record container info
-	containerName, err := recordContainerInfo(parent.Process.Pid, comArray, containerName)
+	var err error
+	containerName, err = recordContainerInfo(parent.Process.Pid, comArray, containerName)
 	if err != nil {
 		log.Errorf("Record container info error %v", err)
 		return
